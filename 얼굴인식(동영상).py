@@ -2,6 +2,13 @@ import face_recognition
 import os
 import cv2
 
+##### 아두이노
+import pyfirmata
+DELAY = 1
+board = pyfirmata.Arduino('COM3')
+servo = board.get_pin('d:9:s')
+servo.write(0)
+#####
 
 KNOWN_FACES_DIR = 'known_faces'
 # UNKNOWN_FACES_DIR = 'unknown_faces'
@@ -71,6 +78,8 @@ while True:
         if True in results:  # If at least one is true, get a name of first of found labels
             match = known_names[results.index(True)]
             print(f' - {match} from {results}')
+
+            servo.write(180)
 
             # Each location contains positions in order: top, right, bottom, left
             top_left = (face_location[3], face_location[0])
