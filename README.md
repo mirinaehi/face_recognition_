@@ -14,3 +14,6 @@ https://www.youtube.com/watch?v=PdkPI92KSIs
 
 음성인식 참고
 https://www.youtube.com/watch?v=DiVMruyDm-U
+
+아두이노 참고(pyfirmata)
+https://studymake.tistory.com/727
