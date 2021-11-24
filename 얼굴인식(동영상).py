@@ -5,9 +5,17 @@ import cv2
 ##### 아두이노
 import pyfirmata
 DELAY = 1
-board = pyfirmata.Arduino('COM3')
+# Uno 버전
+# board = pyfirmata.Arduino('COM4')
+board = pyfirmata.ArduinoMega('COM4')
+
+# PWM 신호
 servo = board.get_pin('d:9:s')
+# digital 신호
+led = board.digital[4]
+
 servo.write(0)
+led.write(0)
 #####
 
 KNOWN_FACES_DIR = 'known_faces'
@@ -79,8 +87,8 @@ while True:
             match = known_names[results.index(True)]
             print(f' - {match} from {results}')
 
-            servo.write(180)
-
+            servo.write(90)
+            led.write(1)
             # Each location contains positions in order: top, right, bottom, left
             top_left = (face_location[3], face_location[0])
             bottom_right = (face_location[1], face_location[2])
@@ -105,6 +113,13 @@ while True:
     # Show image
     cv2.imshow("", image)
     if cv2.waitKey(1) & 0xFF == ord("q"):
+        # TODO : q 버튼을 누르면 불은 잘 꺼지나 문(모터)의 각도가 살짝만 바뀜 (똑같은 write(0)인데 이유를 모르겠음)
+        servo.write(0)
+        led.write(0)
+        print("디버깅")
         break
     # cv2.waitKey(0)
     # cv2.destroyWindow(filename)
+
+# servo.write(0)
+# exit()
