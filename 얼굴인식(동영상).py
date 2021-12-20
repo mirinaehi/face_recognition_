@@ -84,7 +84,7 @@ while True:
 
     for face_encoding, face_location in zip(encodings, locations):
         
-        # 128차원의 nparray에서 norm값이 0.5(TOLERANCE) 이하인 것을 발견하면 True
+        # 128차원의 nparray에서 Euclidean distance의 norm값이 0.5(TOLERANCE) 이하인 것을 발견하면 True
         # 전달된 known_faces의 순서대로 True/False 값의 배열을 반환
         results = face_recognition.compare_faces(known_faces, face_encoding, TOLERANCE)
 
