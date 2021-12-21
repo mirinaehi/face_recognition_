@@ -72,19 +72,21 @@ print('얼굴인식 시작')
 while True:
     ret, image = video.read()
 
+    # mmod_human_face_detector.dat 사용
     # CNN을 이용하여 얼굴의 위치를 계산
     locations = face_recognition.face_locations(image, model=MODEL)
     # hog 방식
     # locations = face_recognition.face_locations(image)
-
-    # 특정 위치에 대한 id를 찾아내기 때문에 속도가 더 빠름
+    
+    # dlib_face_recognition_resnet_model_v1.dat 사용
+    # locations를 통하여 특정 위치에 대한 id를 찾아냈기 때문에 속도가 더 빠름
     # 사진을 불러오는 코드에서는 locations이 없어서 사진 하나당 encoding의 속도가 느리나,
     # 사진은 몇 장 되지 않고, 여기에는 무한루프로 계속 실행함
     encodings = face_recognition.face_encodings(image, locations)
 
     for face_encoding, face_location in zip(encodings, locations):
         
-        # 128차원의 nparray형태의 두 encoding들의 Euclidean distance의 norm값이 0.5(TOLERANCE) 이하인 것을 발견하면 True
+        # 128차원의 nparray형태의 두 encoding들의 Euclidean distance의 norm값이 0.5(TOLERANCE)[default는 0.6이나 보다 더 strictly] 이하인 것을 발견하면 True
         # 전달된 known_faces의 순서대로 True/False 값의 배열을 반환
         results = face_recognition.compare_faces(known_faces, face_encoding, TOLERANCE)
 
