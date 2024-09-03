@@ -5,9 +5,9 @@ import os
 # 학습된 데이터(사진)이 있는 디렉토리
 KNOWN_FACES_DIR = 'known_faces'
 # 인식하고자 하는 사진 파일
-IMAGE_TO_TEST = 'test_faces/test1.jpg'
+IMAGE_TO_TEST = 'test_faces/test4.jpg'
 
-TOLERANCE = 0.4
+TOLERANCE = 0.38
 FRAME_THICKNESS = 3
 FONT_THICKNESS = 2
 #MODEL = 'cnn'
