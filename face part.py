@@ -3,6 +3,7 @@ import cv2
 import pickle
 import numpy as np
 from PIL import ImageFont, ImageDraw, Image
+import hashlib
 
 # 인식하고자 하는 사진 파일
 IMAGE_TO_TEST = 'test_faces/test4.jpg'
@@ -14,10 +15,16 @@ FRAME_THICKNESS = 3
 FONT_THICKNESS = 2
 MODEL = 'hog'
 
+
 def name_to_color(name):
-    # 이름을 색상으로 변환 (RGB 튜플로 반환)
-    color = [(ord(c.lower()) - 97) * 8 for c in name[:3]]
-    return tuple(color)
+    # 이름을 해시하여 색상으로 변환
+    # 해시값을 24비트 RGB 색상으로 변환
+    hash_value = hashlib.md5(name.encode()).hexdigest()
+    r = int(hash_value[0:2], 16)
+    g = int(hash_value[2:4], 16)
+    b = int(hash_value[4:6], 16)
+    return (r, g, b)
+
 
 # 저장된 학습 데이터 불러오기
 with open(ENCODINGS_FILE, 'rb') as f:
@@ -52,6 +59,8 @@ for face_encoding, face_location in zip(encodings, locations):
         top_left = (face_location[3], face_location[0])
         bottom_right = (face_location[1], face_location[2])
         color = name_to_color(match)
+
+        # 얼굴 외곽 프레임 그리기
         draw.rectangle([top_left, bottom_right], outline=color, width=FRAME_THICKNESS)
 
         # 텍스트 추가 (Pillow 사용)
