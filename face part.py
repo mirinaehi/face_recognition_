@@ -20,7 +20,7 @@ def name_to_color(name):
 with open(ENCODINGS_FILE, 'rb') as f:
     known_faces, known_names = pickle.load(f)
 
-print('얼굴인식 시작')
+print('\033[91m' + '얼굴 인식 시작' + '\033[0m')
 
 # 테스트 이미지 로드
 test_image = face_recognition.load_image_file(IMAGE_TO_TEST)

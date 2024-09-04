@@ -15,7 +15,7 @@ def name_to_color(name):
     color = [(ord(c.lower()) - 97) * 8 for c in name[:3]]
     return color
 
-print('얼굴 학습중')
+print('\033[91m' + '얼굴 학습중' + '\033[0m')
 known_faces = []
 known_names = []
 
