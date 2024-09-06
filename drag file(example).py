@@ -1,5 +1,5 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel
+from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QAction, QFileDialog
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtCore import Qt
 
@@ -7,63 +7,68 @@ from PyQt5.QtCore import Qt
 class ImageWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        # 창의 제목을 설정
         self.setWindowTitle('Drag and Drop Image Viewer')
-
-        # 창의 크기와 위치 설정 (x, y, width, height)
         self.setGeometry(100, 100, 800, 600)
 
-        # QLabel 위젯 생성 및 초기 텍스트 설정
+        # QLabel 생성
         self.label = QLabel('Drag an image file here', self)
-
-        # 텍스트를 중앙 정렬
         self.label.setAlignment(Qt.AlignCenter)
-
-        # QLabel을 메인 윈도우의 중앙 위젯으로 설정
         self.setCentralWidget(self.label)
 
-        # 드래그 앤 드롭을 활성화
+        # 드래그 앤 드롭 활성화
         self.setAcceptDrops(True)
 
-    # 드래그 이벤트 처리: 드래그된 데이터가 URL일 경우 허용
+        # 메뉴바 설정
+        self.create_menu()
+
+    def create_menu(self):
+        # 메뉴바 생성
+        menu_bar = self.menuBar()
+
+        # 파일 메뉴 생성
+        file_menu = menu_bar.addMenu('파일')
+
+        # "이미지 열기" 액션 추가
+        open_action = QAction('이미지 열기', self)
+        open_action.triggered.connect(self.open_image)
+        file_menu.addAction(open_action)
+
+        # "종료" 액션 추가
+        exit_action = QAction('종료', self)
+        exit_action.triggered.connect(self.close)  # 프로그램 종료
+        file_menu.addAction(exit_action)
+
+    def open_image(self):
+        # 파일 열기 대화상자를 열고 이미지 파일 선택
+        file_path, _ = QFileDialog.getOpenFileName(self, "이미지 파일 열기", "", "이미지 파일 (*.png *.jpg *.jpeg *.bmp *.gif)")
+
+        if file_path:
+            self.load_image(file_path)
+
     def dragEnterEvent(self, event):
-        if event.mimeData().hasUrls():  # 드래그된 데이터에 파일이 있는지 확인
-            event.acceptProposedAction()  # 드래그 동작 허용
+        if event.mimeData().hasUrls():
+            event.acceptProposedAction()
 
-    # 드롭 이벤트 처리: 드롭된 파일을 처리
     def dropEvent(self, event):
-        # 드롭된 모든 파일 URL에 대해 반복 처리
         for url in event.mimeData().urls():
-            file_path = url.toLocalFile()  # 로컬 파일 경로 가져오기
-            # 이미지 파일 확장자 체크 (.png, .jpg, .jpeg, .bmp, .gif 만 허용)
+            file_path = url.toLocalFile()
             if file_path.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp', '.gif')):
-                self.load_image(file_path)  # 이미지 로드 함수 호출
+                self.load_image(file_path)
 
-    # 이미지를 로드하고 QLabel에 표시하는 함수
     def load_image(self, file_path):
         # QPixmap으로 이미지 로드
         pixmap = QPixmap(file_path)
 
-        # 현재 QLabel 크기를 얻음
+        # QLabel의 크기를 얻고 비율을 유지하면서 스케일 조정
         label_size = self.label.size()
-
-        # 이미지의 비율을 유지하면서 QLabel 크기에 맞게 스케일 조정
         scaled_pixmap = pixmap.scaled(label_size, Qt.KeepAspectRatio, Qt.SmoothTransformation)
 
-        # QLabel에 이미지를 설정하고 원본 비율 유지
+        # QLabel에 이미지 설정
         self.label.setPixmap(scaled_pixmap)
 
 
-# 메인 프로그램 시작
 if __name__ == '__main__':
-    # QApplication 객체 생성 (애플리케이션을 실행하는 핵심 클래스)
     app = QApplication(sys.argv)
-
-    # ImageWindow 객체 생성
     window = ImageWindow()
-
-    # 메인 윈도우 표시
     window.show()
-
-    # 애플리케이션 실행 및 종료 처리
     sys.exit(app.exec_())
