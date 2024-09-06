@@ -41,9 +41,17 @@ class ImageWindow(QMainWindow):
 
     # 이미지를 로드하고 QLabel에 표시하는 함수
     def load_image(self, file_path):
-        pixmap = QPixmap(file_path)  # QPixmap을 사용해 이미지 로드
-        self.label.setPixmap(pixmap)  # QLabel에 이미지를 설정
-        self.label.setScaledContents(True)  # QLabel 크기에 맞게 이미지 스케일 조정
+        # QPixmap으로 이미지 로드
+        pixmap = QPixmap(file_path)
+
+        # 현재 QLabel 크기를 얻음
+        label_size = self.label.size()
+
+        # 이미지의 비율을 유지하면서 QLabel 크기에 맞게 스케일 조정
+        scaled_pixmap = pixmap.scaled(label_size, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+
+        # QLabel에 이미지를 설정하고 원본 비율 유지
+        self.label.setPixmap(scaled_pixmap)
 
 
 # 메인 프로그램 시작
