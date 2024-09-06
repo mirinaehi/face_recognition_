@@ -3,7 +3,6 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QAction, QFileDia
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtCore import Qt
 
-
 class ImageWindow(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -17,6 +16,12 @@ class ImageWindow(QMainWindow):
 
         # 드래그 앤 드롭 활성화
         self.setAcceptDrops(True)
+
+        # 이미지의 QPixmap 저장용 변수
+        self.pixmap = None
+
+        # QLabel의 최소 크기 설정 (너무 작아지지 않도록 설정)
+        self.label.setMinimumSize(100, 100)
 
         # 메뉴바 설정
         self.create_menu()
@@ -57,15 +62,23 @@ class ImageWindow(QMainWindow):
 
     def load_image(self, file_path):
         # QPixmap으로 이미지 로드
-        pixmap = QPixmap(file_path)
+        self.pixmap = QPixmap(file_path)
 
-        # QLabel의 크기를 얻고 비율을 유지하면서 스케일 조정
-        label_size = self.label.size()
-        scaled_pixmap = pixmap.scaled(label_size, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+        # 현재 창 크기에 맞게 비율을 유지하면서 스케일 조정
+        self.update_image()
 
-        # QLabel에 이미지 설정
-        self.label.setPixmap(scaled_pixmap)
+    def resizeEvent(self, event):
+        # 창 크기가 변경될 때마다 이미지를 업데이트
+        self.update_image()
 
+    def update_image(self):
+        if self.pixmap:
+            # QLabel의 크기를 얻고 비율을 유지하면서 스케일 조정
+            label_size = self.label.size()
+            scaled_pixmap = self.pixmap.scaled(label_size, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+
+            # QLabel에 이미지 설정
+            self.label.setPixmap(scaled_pixmap)
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
