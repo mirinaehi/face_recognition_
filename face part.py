@@ -127,11 +127,16 @@ class ImageWindow(QMainWindow):
             draw = ImageDraw.Draw(test_image_pil)
             font = ImageFont.truetype(self.fontpath, 24)  # 글꼴과 크기 설정
 
+            # 매치된 얼굴의 결과물
+            match_list = []
+
             for face_encoding, face_location in zip(encodings, locations):
                 results = face_recognition.compare_faces(self.known_faces, face_encoding, self.TOLERANCE)
                 match = None
+
                 if True in results:
                     match = self.known_names[results.index(True)]
+                    match_list.append(match)
                     print(f' - {match} from {results}')
 
                     # 얼굴 외곽 프레임 그리기 (Pillow 사용)
@@ -148,7 +153,8 @@ class ImageWindow(QMainWindow):
 
             # OpenCV에서 사용하기 위해 다시 변환
             test_image = np.array(test_image_pil)
-            
+
+            print('\033[94m' + str(match_list) + '\033[0m')
             # TODO : 얼굴인식 화면을 닫지 않아도 파일을 끌 수 있게 하기
             # 얼굴 인식 결과를 화면에 표시
             cv2.imshow('Face Recognition', test_image)
