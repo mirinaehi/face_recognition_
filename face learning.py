@@ -7,6 +7,8 @@ KNOWN_FACES_DIR = 'known_faces'
 # 저장할 파일 이름
 ENCODINGS_FILE = 'encodings.pickle'
 
+MODEL = 'cnn'  # 얼굴 인식 모델
+
 def load_known_faces(directory):
     """주어진 디렉토리에서 얼굴을 인식하고 인코딩된 데이터를 반환합니다."""
     known_faces, known_names = [], []
@@ -26,7 +28,7 @@ def load_known_faces(directory):
                 try:
                     # 이미지를 로드하고 얼굴 인코딩
                     image = face_recognition.load_image_file(filepath)
-                    encodings = face_recognition.face_encodings(image)
+                    encodings = face_recognition.face_encodings(image, model=MODEL)
                     if encodings:
                         known_faces.append(encodings[0])  # 첫 번째 얼굴 인코딩 추가
                         known_names.append(name)  # 해당 이름 추가

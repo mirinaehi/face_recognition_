@@ -39,7 +39,7 @@ class ImageWindow(QMainWindow):
         self.TOLERANCE = 0.38
         self.FRAME_THICKNESS = 3
         self.FONT_THICKNESS = 2
-        self.MODEL = 'hog'
+        self.MODEL = 'cnn'  # 얼굴 인식 모델
         self.fontpath = "fonts/gulim.ttc"  # 사용할 한글 폰트 경로
 
         # 인코딩 파일 경로
